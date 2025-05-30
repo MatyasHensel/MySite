@@ -1,0 +1,15 @@
+{
+    "MainTitleAboutWebsite":"About website",
+    "MainTitleAboutMe":     "About me",
+    "AboutWebsiteLink":     "About website",
+    "AboutWebsiteH1":       "What is this?",
+    "AboutWebsiteP1":       "I made this website to show what I can do as a programmer. I really enjoy coding, so working on this project was a lot of fun and a great way to sharpen my skills. I also wanted to learn more about how domains and server-side development work, and building this site taught me a lot. Hopefully, you’ll find the site fun to explore.",
+    "AboutWebsiteH2":       "!!!This site is still under construction!!!",
+    "AboutWebsiteP2":       "Not everything might work correctly, I plan to add a lot of stuff and am still working on it, so please be patient. The text is ai-generated for now, i will write it myself when the technical side is finished.", 
+    "AboutMeLink":          "About me",
+    "ShowcaseMenu":         "Showcases",
+    "AboutMeH1":            "AboutMe",
+    "AboutMeP1":            "Hi, I'm Matyáš Hensel. I love coding and working on all kinds of projects, from building robots to creating my own terrarium. I also really enjoy game development and have made a few games in the past. I enjoy learning new skills and turning ideas into real things, and I'm always excited to dive into something new. I also love meeting new people and making new friends — sharing ideas and learning from others keeps things exciting for me.",
+    "AboutJSShowcaseH1":    "About This Showcase",
+    "AboutJSShowcaseP1":    "This is a recreation of the three body problem, you can set the mass of each star and hit reset to confirm, i wanted to show my basic knowlage of java script and also my background in game development, as this shares a lot of logic and math with vectors. I plan to work on it further and maybe add colisions in the future, but i am happy with the state which it is in now. Feel free to try different combinations, and i would apreciate feedback if something is not working."
+}

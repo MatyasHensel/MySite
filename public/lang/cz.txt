@@ -1,0 +1,15 @@
+{
+    "MainTitleAboutWebsite":"O stránce",
+    "MainTitleAboutMe":     "O mně",
+    "AboutWebsiteLink":     "O stránce",
+    "AboutWebsiteH1":       "Co to je?",
+    "AboutWebsiteP1":       "Tento web jsem vytvořil, abych ukázal moje schopnosti jako programátor. Baví mě programování, a tuto stránku jsem vytvořil abych si zdokonalil a připoměl programování stránek. Také jsem se naučil jak fungují domény a server-side vývoj, a stavění tohoto webu mě toho hodně naučilo. Doufám, že web pro vás bude zábavný a zajímavý k prozkoumání.",
+    "AboutWebsiteH2":       "!!!Tento web je stále ve vývoji!!!",
+    "AboutWebsiteP2":       "Ne všechno musí fungovat správně. Plánuji přidat spoustu nových funkcí a stále na tom pracuji, takže buďte trpěliví. Text je zatím ai=generovaný, až doprogramuji stranku tak ho napíšu sám.",
+    "AboutMeLink":          "O mně",
+    "JSShowcaseMenu":           "Ukázka JS",
+    "AboutMeH1":            "O mně",
+    "AboutMeP1":            "Jsem Matyáš Hensel. Rád kóduji a pracuji na různých projektech, od stavby robotů až po vytváření vlastního terária. Také mě velmi baví vývoj her a v minulosti jsem vytvořil několik her. Rád se učím nové dovednosti a proměňuji nápady ve skutečné věci, vždy jsem nadšený, když mohu začít s něčím novým. Také rád poznávám nové lidi a navazuji nová přátelství — sdílení nápadů a učení se od ostatních mě stále motivuje.",
+    "AboutJSShowcaseH1":    "About This Showcase",
+    "AboutJSShowcaseP1":    "This is a recreation of the three body problem, you can set the mass of each star and hit reset to confirm, i wanted to show my basic knowlage of java script and also my background in game development, as this shares a lot of logic and math with vectors. I plan to work on it further and maybe add colisions in the future, but i am happy with the state which it is in now. Feel free to try different combinations, and i would apreciate feedback if something is not working."
+}
