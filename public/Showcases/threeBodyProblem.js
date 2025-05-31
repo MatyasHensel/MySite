@@ -1,15 +1,17 @@
 // --------------- Settings ---------------
-const initialStarVel = 2;
+const initialStarVel = .1;
 const starVelDivision = 1000;
-const smallestGravAtractionRange = 5;
-const gravSlowdown = .05;
+const smallestGravAtractionRange = 1;
+const gravSlowdown = .5;
+const softening = 5;
+
+const canvasBackgroundColor = '#1C1C1C';
 // --------------- Settings ---------------
-let starCount = 5;
+const starCount = 3;
 
 
 const canvas = document.getElementById('canvas');
 const ctx = canvas.getContext('2d');
-
 
 //resize the cavas display and resolution
 function resizeCanvas(){
@@ -73,6 +75,16 @@ class Vector2 {
         this.x /= dividor;
         this.y /= dividor;
     }
+
+    length(){
+        let length = Math.sqrt(this.x * this.x + this.y * this.y);
+
+        if(length < smallestGravAtractionRange){
+            length = smallestGravAtractionRange;
+        }
+
+        return length;
+    }
 }
 
 //generate a star in start state
@@ -95,56 +107,76 @@ function createStars(){
     starArray.length = 0;
     for(let i = 0; i < starCount; i++){
         starArray.push(starGen());
+
+        let suffix = '';
+        if(i === 0) suffix = 'A';
+        if(i === 1) suffix = 'B';
+        if(i === 2) suffix = 'C';
+
+        document.getElementById(`starContainer${suffix}`).style.backgroundColor = `rgb(${starArray[i].r},${starArray[i].g},${starArray[i].b})`;
     }
 }
 
 // the center of mass shouldnt change so i can find it out only once
 let commonCenter = new Vector2(0, 0);
+let totalMass = 1;
 
 function computeCenterOfMass(){
     let centerXHolder = 0;
     let centerYHolder = 0;
-    let totalMass = 0;
+    totalMass = 0;
 
     for(let i = 0; i < starArray.length; i++){
         let star = starArray[i];
 
         totalMass += star.mass;
-        centerXHolder += star.position.x * star.mass;
-        centerYHolder += star.position.y * star.mass;
+        centerXHolder += star.position.x;
+        centerYHolder += star.position.y;
     }
 
     if(totalMass == 0) return;
 
-    commonCenter = new Vector2(centerXHolder / totalMass, centerYHolder / totalMass);
+    commonCenter = new Vector2(centerXHolder / 3, centerYHolder / 3);
 
     return;
 }
 
 function simulateFrame(){
     computeCenterOfMass();
+    setStarMasses();
 
     for(let i = 0; i < starCount; i++){
-        let star = starArray[i];
+        let starA = starArray[i];
 
-        let vectorToCenter = commonCenter.subtracted(star.position);
-        vectorToCenter.normalize();
+        for(let j = 0; j < starCount; j++){
+            if(i == j) continue;
 
-        vectorToCenter.multiply(gravSlowdown);
-        vectorToCenter.divide(star.mass);
+            let starB = starArray[j];
 
-        star.velocity.add(vectorToCenter);
+            let AtoB = starB.position.subtracted(starA.position);
+            const length = Math.sqrt(AtoB.x ** 2 + AtoB.y ** 2 + softening ** 2);
+            AtoB.normalize();
 
-        star.position.add(star.velocity);
+            AtoB.multiply(gravSlowdown * starB.mass);
+            AtoB.divide(starA.mass);
+            //AtoB.divide(totalMass);
+
+            AtoB.divide(length);
+
+            starA.velocity.add(AtoB);
+        }
+
+        starA.position.add(starA.velocity);
     }
 }
-
 
 function centerCanvas(){
     let perfectCenter = new Vector2(canvas.width / 2, canvas.height / 2);
 
     let moveByVector = perfectCenter.subtracted(commonCenter);
+    moveByVector.x += window.innerWidth * 0.1;
 
+    moveByVector.divide(6000);
     commonCenter.add(moveByVector);
 
     for(let i = 0; i < starArray.length; i++){
@@ -157,19 +189,76 @@ function centerCanvas(){
 
 function update(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = canvasBackgroundColor;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     simulateFrame();
-    centerCanvas();
+    //centerCanvas();
 
     if(starArray.length != 0){
         for(let i = 0; i < starArray.length; i++){
             const star = starArray[i];
-            drawCircle(star.position.x, star.position.y, star.mass * 5, star.r, star.g, star.b);
+            drawCircle(star.position.x, star.position.y, star.mass * 3 + 10, star.r, star.g, star.b);
         }
     }
 
     requestAnimationFrame(update);
 }
+
+function setStarMasses(){
+    starArray[0].velocity.divide((Number(sliderA.value)) / starArray[0].mass);
+    starArray[0].mass = Number(sliderA.value);
+
+    starArray[1].velocity.divide((Number(sliderB.value)) / starArray[1].mass);
+    starArray[1].mass = Number(sliderB.value);
+
+    starArray[2].velocity.divide((Number(sliderC.value)) / starArray[2].mass);
+    starArray[2].mass = Number(sliderC.value);
+}
+
+function resetSim(){
+    starArray.length = 0;
+    createStars();
+    setStarMasses();
+}
+
+
+const starMenuWeightA = document.getElementById('starMenuWeightA');
+const starMenuWeightB = document.getElementById('starMenuWeightB');
+const starMenuWeightC = document.getElementById('starMenuWeightC');
+
+let weightOriginalTextA = 'string';
+let weightOriginalTextB = 'string';
+let weightOriginalTextC = 'string';
+window.addEventListener('DOMContentLoaded', () => {
+    weightOriginalTextA = starMenuWeightA.innerText;
+    weightOriginalTextB = starMenuWeightB.innerText;
+    weightOriginalTextC = starMenuWeightC.innerText;
+
+    starMenuWeightA.innerText = weightOriginalTextA + String(Number(sliderA.value));
+    starMenuWeightB.innerText = weightOriginalTextB + String(Number(sliderB.value));
+    starMenuWeightC.innerText = weightOriginalTextC + String(Number(sliderC.value));
+});
+
+
+const sliderA = document.getElementById('sliderA');
+const sliderB = document.getElementById('sliderB');
+const sliderC = document.getElementById('sliderC');
+
+sliderA.addEventListener('input', () =>{
+    starMenuWeightA.innerText = weightOriginalTextA + String(Number(sliderA.value));
+});
+sliderB.addEventListener('input', () =>{
+    starMenuWeightB.innerText = weightOriginalTextB + String(Number(sliderB.value));
+});
+sliderC.addEventListener('input', () =>{
+    starMenuWeightC.innerText = weightOriginalTextC + String(Number(sliderC.value));
+});
+
+const resetButton = document.getElementById('resetButton');
+
+resetButton.addEventListener('click', resetSim);
+
 
 createStars();
 computeCenterOfMass();

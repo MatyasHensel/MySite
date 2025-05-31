@@ -7,3 +7,139 @@ canvas{
     margin: 0;
     padding: 0;
 }
+
+.menuContainer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 25px;
+    background-color: #0080DC;
+    width: 20%;
+    min-width: 350px;
+    height: 50%;
+    min-height: 500px;
+    z-index: 1;
+    overflow: hidden;
+    text-align: left;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 2px solid black;
+    text-align: left;
+    box-shadow: 0px 5px black;
+}
+
+.starMenuContainer{
+    background-color: #005ea1;
+    width: 90%;
+    height: 22%;
+    margin-left: 5%;
+    margin-bottom: 5%;
+    margin-top: 0px;
+    padding: 0;
+    overflow: hidden;
+    text-align: left;
+    box-sizing: border-box;
+    border-radius: 10px;
+    border: 2px solid black;
+    text-align: left;
+    box-shadow: 0px 5px black;
+}
+
+.backButton{
+    font-size: 40px;
+    z-index: 1;
+    width: auto;
+    height: auto;
+    padding: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 5%;
+    border-radius: 10px;
+    box-shadow: 0px 5px black;
+    border: 5px solid black;
+    cursor: pointer;
+}
+.backButton:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 10px black;
+}
+.backButton:active{
+    transform: translateY(0px);
+    box-shadow: 0px 5px black;
+}
+
+.confirmButton{
+    font-size: 15px;
+    z-index: 1;
+    width: auto;
+    height: auto;
+    padding: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin: 5%;
+    border-radius: 10px;
+    box-shadow: 0px 5px black;
+    border: 5px solid black;
+    cursor: pointer;
+}
+.confirmButton:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 10px black;
+}
+.confirmButton:active{
+    transform: translateY(0px);
+    box-shadow: 0px 5px black;
+}
+
+
+h1{
+    font-family: sans-serif;
+    font-size: 25px;
+    margin: 0;
+    padding-left: 5%;
+    padding-top: 2%;
+}
+h2{
+    font-family: sans-serif;
+    font-size: 20px;
+    margin: 0;
+    padding-left: 5%;
+    padding-top: 1%;
+}
+
+.slider{
+    appearance: none;
+    -webkit-appearance: none;
+    position: relative;
+    width: 90%;
+    height: 4px;
+    background-color: black;
+    z-index: 1;
+    cursor: pointer;
+    margin-top: 7%;
+    margin-bottom: 5px;
+    margin-left: 5%;
+    padding: 0;
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px; 
+    background: white;
+    cursor: pointer;
+    border-radius: 50%;
+    transform: translateY(-5px);
+    border: 5px solid black;
+    box-shadow: 0px 5px black;
+}
+.slider::-moz-range-thumb {
+    width: 40px;
+    height: 25px; 
+    background: black;
+    cursor: pointer;
+    border-radius: 2px;
+    transform: translateY(-5px);
+    border: 5px solid rgb(255, 255, 255);
+    box-shadow: 0px 5px black;
+}

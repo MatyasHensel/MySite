@@ -13,7 +13,26 @@
     <script src="threeBodyProblem.js" defer></script>
 </head>
 <body>
-
     <canvas id="canvas"></canvas>
 
+    <div class="menuContainer">
+        <button class="backButton" onclick="setTimeout(function(){window.location.href='../Showcases.html'}, 50)">Back</button>
+        <button class="backButton" style="position: absolute; right: 0px;" id="resetButton">Reset</button>
+
+        <div class="starMenuContainer" id="starContainerA">
+            <h1 id="starMenuTitleA">Star A</h1>
+            <h2 id="starMenuWeightA">Weight: </h2>
+            <input type="range" min="1" max="10" value="1" class="slider" id="sliderA">
+        </div>
+        <div class="starMenuContainer" id="starContainerB">
+            <h1 id="starMenuTitleB">Star B</h1>
+            <h2 id="starMenuWeightB">Weight: </h2>
+            <input type="range" min="1" max="10" value="1" class="slider" id="sliderB">
+        </div>
+        <div class="starMenuContainer" id="starContainerC">
+            <h1 id="starMenuTitleC">Star C</h1>
+            <h2 id="starMenuWeightC">Weight: </h2>
+            <input type="range" min="1" max="10" value="1" class="slider" id="sliderC">
+        </div>
+    </div>
 </body>
