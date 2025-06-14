@@ -85,16 +85,24 @@ a:hover{
     outline: none;
     height: 50px;
     width: 75px;
-    background-color: #0080DC;
+    background-color: white;
+    border: 5px solid black;
     margin:auto;
     z-index: 1;
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 5px;
+    top: 5px;
     cursor: pointer;
+    border-radius: 10px;
+    box-shadow: 0px 5px black;
 }
 .buttonLang:hover{
-    background-color: #005ea1;
+    transform: translateY(-5px);
+    box-shadow: 0px 10px black;
+}
+.buttonLang:active{
+    transform: translateY(2px);
+    box-shadow: 0px 3px black;
 }
 
 .mainTitle{
@@ -321,4 +329,55 @@ input[type=text]{
 .showcaseP1{
     position: absolute;
     padding-top: 80px;
+}
+
+.darkMode{
+    position: absolute;
+    right: 5px;
+    top: 75px;
+}
+.darkMode input{
+    display: none;
+}
+
+.slider {
+  display: inline-block;
+  width: 69px;
+  height: 35px;
+  background-color: white;
+  border-radius: 34px;
+  position: relative;
+  cursor: pointer;
+  transition: 0.4s;
+  border: 5px solid black;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  left: -1px;
+  bottom: -1px;
+  background-color: #003154;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border: 1px solid black;
+}
+
+
+input:checked + .slider {
+  background-color: #2D2D2D;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2D2D2D;
+}
+
+input:checked + .slider:before {
+    background-color: #5f0c85;
+  -webkit-transform: translateX(35px);
+  -ms-transform: translateX(35px);
+  transform: translateX(35px);
 }
