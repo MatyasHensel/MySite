@@ -14,26 +14,26 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
-.slide-in-left{
-    animation: slideInLeft 0.25s ease-out forwards;
+.slide-in-top{
+    animation: slideInTop 0.4s ease-out forwards;
     transition-timing-function: ease-in;
 }
-@keyframes slideInLeft{
+@keyframes slideInTop{
     0% {
-        transform: translateX(-200%);
+        transform: translateY(-200%);
     }
-    50% {
-        transfrom: translateX(-25%);
-    }
-    90% {
-        transform: translateX(3%);
-    }
-    95% {
-        transform: translateX(3%);
-    }
+    
     100% {
-        transform: translateX(0);
+        transform: translateY(0);
     }
+}
+.fade{
+    animation: fade 0.5s ease-out forwards;
+    transition-timing-function: ease-in;
+}
+@keyframes fade{
+    from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 
@@ -80,6 +80,7 @@ p1{
     margin: 0 auto;
     padding: 20px;
     max-width: 500px;
+    color: black;
 }
 
 
@@ -182,7 +183,7 @@ input[type=text]{
 
 .showcaseContainer{
     position: relative;
-    background-color: #181818;
+    background-color: #4B4B4B;
     margin: 40px auto 40px auto;
     height: 354px;
     width: 70%;

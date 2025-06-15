@@ -28,24 +28,26 @@ a.dark:hover{
     outline: none;
     height: 50px;
     width: 75px;
-    background-color: white;
+    background-color: black;
     border: 5px solid black;
     margin:auto;
     z-index: 1;
     position: absolute;
     right: 5px;
-    top: 5px;
+    top: 15px;
     cursor: pointer;
     border-radius: 10px;
-    box-shadow: 0px 5px black;
+    box-shadow: 0px 0px black;
+    transition: 200ms;
 }
 .buttonLang:hover{
-    transform: translateY(-5px);
+    transform: translateY(-10px);
     box-shadow: 0px 10px black;
 }
 .buttonLang:active{
-    transform: translateY(2px);
-    box-shadow: 0px 3px black;
+    transform: translateY(-2px);
+    box-shadow: 0px 2px black;
+    transition: 50ms;
 }
 
 .mainTitle{
@@ -56,7 +58,7 @@ a.dark:hover{
     font-family: sans-serif;
     font-size: 100px;
     text-align: center;
-    background-color: #0080DC;
+    background-color: black;
     margin: 0;
     padding: 0;
 }
@@ -68,7 +70,7 @@ a.dark:hover{
 }
 .letter:hover {
     color: transparent;
-    transition: .1s;
+    transition: 0s;
 }
 
 .menuSpacer{
@@ -87,7 +89,7 @@ a.dark:hover{
     min-width: 600px;
     padding-left:50px;
     padding-right:50px;
-    background-color: #005ea1;
+    background-color: black;
     position: sticky;
     display: flex;
     margin: 0;
@@ -100,8 +102,8 @@ a.dark:hover{
 
 .darkMode{
     position: absolute;
-    right: 5px;
-    top: 75px;
+    right: 100px;
+    top: 15px;
 }
 .darkMode input{
     display: none;
@@ -143,7 +145,7 @@ input:focus + .slider {
 
 input:checked + .slider:before {
     background-color: #5f0c85;
-  -webkit-transform: translateX(34px);
-  -ms-transform: translateX(34px);
-  transform: translateX(34px);
+  -webkit-transform: translateX(33px);
+  -ms-transform: translateX(33px);
+  transform: translateX(33px);
 }

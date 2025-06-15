@@ -7,7 +7,7 @@
     "AboutWebsiteH2":       "!!!Tento web je stále ve vývoji!!!",
     "AboutWebsiteP2":       "Ne všechno musí fungovat správně. Plánuji přidat spoustu nových funkcí a stále na tom pracuji, takže buďte trpěliví. Text je zatím ai=generovaný, až doprogramuji stranku tak ho napíšu sám.",
     "AboutMeLink":          "O mně",
-    "JSShowcaseMenu":           "Ukázka JS",
+    "ShowcaseMenu":         "Projekty",
     "AboutMeH1":            "O mně",
     "AboutMeP1":            "Jsem Matyáš Hensel. Rád kóduji a pracuji na různých projektech, od stavby robotů až po vytváření vlastního terária. Také mě velmi baví vývoj her a v minulosti jsem vytvořil několik her. Rád se učím nové dovednosti a proměňuji nápady ve skutečné věci, vždy jsem nadšený, když mohu začít s něčím novým. Také rád poznávám nové lidi a navazuji nová přátelství — sdílení nápadů a učení se od ostatních mě stále motivuje.",
     "AboutJSShowcaseH1":    "About This Showcase",
