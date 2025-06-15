@@ -1,0 +1,8 @@
+{
+    "palette": "light",
+    "MainTitleBackground": "#0080DC",
+    "MainMenuColor": "#005EA1",
+    "BodyBackground": "#FFFFFF",
+    "TextColor": "#000000",
+    "ShowcaseBox": "#FFFFFF"
+}

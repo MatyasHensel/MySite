@@ -1,4 +1,17 @@
-var currentLang = String('en');
+if(!localStorage.getItem("lang")){
+    localStorage.setItem("lang", "en");
+}
+if(localStorage.getItem("lang") == "en"){
+    document.getElementById('buttonLang').innerText = 'CZ';
+}else{
+    document.getElementById('buttonLang').innerText = 'ENG';    
+}
+
+if(localStorage.getItem("darkMode") === null){
+    localStorage.setItem("darkMode", "true");
+}
+
+var currentLang = localStorage.getItem("lang");
 
 function updateTitle(newText){
     document.getElementById('mainTitle').innerText = newText;
@@ -17,10 +30,12 @@ function buttonPressed(){
         setLanguage('cz');
         currentLang = String('cz');
         document.getElementById('buttonLang').innerText = 'ENG';
+        localStorage.setItem("lang", "cz");
     }else{
         setLanguage('en');
         currentLang = String('en');
         document.getElementById('buttonLang').innerText = 'CZ';
+        localStorage.setItem("lang", "en");
     };
 }
 
@@ -31,8 +46,6 @@ function setLanguage(language){
         document.getElementById('aboutMeMenu').innerText = data.AboutMeLink;
         document.getElementById('aboutWebsiteMenu').innerText = data.AboutWebsiteLink;
         document.getElementById('ShowcaseMenu').innerText = data.ShowcaseMenu;
-
-        console.log(window.location.pathname);
 
         if(window.location.pathname == '/index.html'){
             updateTitle(data.AboutWebsiteLink);
@@ -51,11 +64,58 @@ function setLanguage(language){
     });
 }
 
-console.log('mySite.js\\js connected');
+let langMemory = localStorage.getItem("lang");
 
-setLanguage('en');
+setLanguage(currentLang);
 
-if (window.location.pathname != '/JSShowcase.html'){
-    document.getElementById('buttonLang').addEventListener('click', buttonPressed);
+document.getElementById('buttonLang').addEventListener('click', buttonPressed);
+
+function setColor(){
+    let colorSet = "";
+    if(localStorage.getItem("darkMode") === "true"){
+        colorSet = "paletteDark";
+    }else{
+        colorSet = "palette";
+    }
+
+    return fetch(`palettes/${colorSet}.txt`)
+    .then(res => res.json())
+    .then(data => {
+        document.body.style.backgroundColor = data.BodyBackground;
+        document.querySelector(".mainTitle").style.backgroundColor = data.MainTitleBackground;
+        document.querySelector(".mainMenu").style.backgroundColor = data.MainMenuColor;
+        document.getElementById('buttonLang').style.backgroundColor = data.BodyBackground;
+        document.getElementById('buttonLang').style.color = data.TextColor;
+        document.querySelectorAll("p1").forEach(p => {
+            p.style.color = data.TextColor;
+        });
+        document.querySelectorAll("a").forEach(a => {
+            a.classList.remove("light");
+            a.classList.remove("dark");
+            a.classList.add(data.palette);
+        });
+        document.querySelectorAll(".showcaseContainer").forEach(showcaseContainer => {
+            showcaseContainer.style.backgroundColor = data.ShowcaseBox;
+            console.log("showcase changed");
+        });
+    });
 }
+
+const checkBox = document.getElementById("darkModeSlider");
+if(localStorage.getItem("darkMode") === "true"){
+    checkBox.checked = true;
+}else{
+    checkBox.checked = false;
+}
+
+window.addEventListener("DOMContentLoaded", () => {
+    setColor();
+});
+
+checkBox.addEventListener("change", () => {
+    localStorage.setItem("darkMode", checkBox.checked.toString());
+
+    setColor();
+});
+
 

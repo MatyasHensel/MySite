@@ -1,3 +1,7 @@
+.buttonLang{
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
 a{
     width: fit-content;
     white-space: nowrap;
@@ -12,9 +16,11 @@ a{
     padding-top: 10px;
     font-weight: bold;
 }
-a:hover{
+a.light:hover{
     background-color: #004677;
-    
+}
+a.dark:hover{
+    background-color: #36074B;
 }
 
 .buttonLang{
