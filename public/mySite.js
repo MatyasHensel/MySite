@@ -118,4 +118,11 @@ checkBox.addEventListener("change", () => {
     setColor();
 });
 
+const email = 'matyas.hensel2004@gmail.com';
+function copyEmail(){
+    navigator.clipboard.writeText(email)
+    .then(() => alert("Email copied!"))
+    .catch(err => alert("Copy failed: " + err));
+}
+
 
