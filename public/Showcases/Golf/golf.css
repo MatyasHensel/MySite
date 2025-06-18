@@ -1,0 +1,36 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+canvas{
+    padding: 0;
+    margin: 0;
+    display:block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.devModeButton{
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    font-size: 40px;
+    z-index: 1;
+    width: 250px;
+    height: auto;
+    padding: 15px;
+    margin: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 5px black;
+    border: 5px solid rgb(32, 32, 32);
+    cursor: pointer;
+}
+.devModeButton:hover{
+    transform: translateY(-5px);
+    box-shadow: 0px 10px black;
+}
+.devModeButton:active{
+    transform: translateY(0px);
+    box-shadow: 0px 5px black;
+}
