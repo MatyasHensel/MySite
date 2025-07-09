@@ -4,6 +4,11 @@ const app = express();
 const PORT = 8080;
 
 app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.ip} requested ${req.method} ${req.url} Host: ${req.headers.host}`);
+  next();
+});
+
+app.use((req, res, next) => {
   if (req.path.startsWith('/.')) {
     return res.status(403).send('Access denied');
   }
@@ -17,9 +22,18 @@ app.use((req, res, next) => {
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('*', (req, res) => {
+  try {
+    console.log('Request Host:', req.headers.host);
+    res.send(`<h1>Hello from ${req.headers.host || 'unknown host'}</h1>`);
+  } catch (e) {
+    console.error('Error handling request:', e);
+    res.status(500).send('Server error');
+  }
+});
+
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server running at http://localhost:${PORT}`);
 });
-
 
 console.log('backendServerRunning');

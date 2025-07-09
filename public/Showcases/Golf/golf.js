@@ -1,7 +1,8 @@
 //------------------------ settings ------------------------
 const canvasRes = 1;
 const gravPull = 1;
-const drag = .95;
+const drag = .97;
+const golfBallRadius = 10;
 //------------------------ settings ------------------------
 let devMode = false;
 function toggleDevMode(){
@@ -187,7 +188,8 @@ function getIntersection(A, B, C, D) {
     const u = ((C.x - A.x) * r_dy - (C.y - A.y) * r_dx) / r_cross_s;
 
     if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-        return {
+
+        return { ///change to reflect call
             x: A.x + r_dx * t,
             y: A.y + r_dy * t,
             distance: t
@@ -197,15 +199,52 @@ function getIntersection(A, B, C, D) {
     return null;
 }
 
-function calculateColisions(a, b){
+function reflect(hx, hy, t, C, D){
+    let vx = golfBall.velocityX;
+    let vy = golfBall.velocityY;
+
+    golfBall.frameT += t;
+    if(golfBall.frameT >= 1){return};
+
+
+    let dx = D.x - C.x;
+    let dy = D.y - C.y;
+
+    //wall normal
+    let nx = -dy;
+    let ny = dx;
+    // Normalize normal
+    let len = Math.sqrt(nx * nx + ny * ny);
+    nx /= len;
+    ny /= len;
+
+    let dot = vx * nx + vy * ny;
+
+    golfBall.velocityX = vx - 2 * dot * nx;
+    golfBall.velocityY = vy - 2 * dot * ny;
+    golfBall.x = hx + golfBall.velocityX * (1 - golfBall.frameT);
+    golfBall.y = hy + golfBall.velocityY * (1 - golfBall.frameT);
+
+    golfBall.moved = true;
+}
+
+function normalizedVector(V){
+    const length = Math.sqrt(V.x * V.x + V.y * V.y);
+    return length === 0 ? {x: 0, y: 0} : {x: V.x / length, y: V.y / length};
+}
+
+function calculateColisions(A, B){
     let closest = null;
 
     for (let i = 0; i < lines.length; i++) {
         const line = lines[i];
-        const A = a;
-        const B = b;
-        const C = { x: line.x1, y: line.y1 };
-        const D = { x: line.x2, y: line.y2 };
+
+        const velBall = {x: B.x - A.x, y: B.y - A.y};
+        const nVelBall = normalizedVector(velBall);
+
+        const C = { x: line.x1 - nVelBall.x * golfBallRadius, y: line.y1 - nVelBall.y * golfBallRadius};
+        const D = { x: line.x2 - nVelBall.x * golfBallRadius, y: line.y2 - nVelBall.y * golfBallRadius};
+
 
         const hit = getIntersection(A, B, C, D);
         if (hit) {
@@ -214,14 +253,18 @@ function calculateColisions(a, b){
                     x: hit.x,
                     y: hit.y,
                     distance: hit.distance,
-                    line: line
+                    line: line,
+                    c: C,
+                    d: D
                 };
             }
         }
     }
 
     if(closest !== null){
-        console.log("collisionX: " + closest.x + ", collisionY: " + closest.y + ", t: " + closest.distance + ", ballAY: " + a.y + ", ballBY: " + b.y);
+        console.log("collisionX: " + closest.x + ", collisionY: " + closest.y + ", t: " + closest.distance + ", ballAY: " + A.y + ", ballBY: " + B.y);
+        reflect(closest.x, closest.y, closest.distance, closest.c, closest.d);
+        //calculateColisions({x: golfBall.x, y: golfBall.y}, {x: golfBall.x + golfBall.velocityX, y: golfBall.y + golfBall.velocityY});
     }
 }
 
@@ -232,6 +275,8 @@ class GolfBall{
         this.y = y;
         this.velocityX = velocityX || 0;
         this.velocityY = velocityY || 0;
+        this.frameT = 0;
+        this.moved = false;
     }
 
     addGravity(){
@@ -247,16 +292,21 @@ function physics(){
     golfBall.velocityX *= drag;
     golfBall.velocityY *= drag;
 
+    golfBall.moved = false;
     //calculate collisions
+    golfBall.frameT = 0;
     calculateColisions({x: golfBall.x, y: golfBall.y}, {x: (golfBall.x + golfBall.velocityX), y: (golfBall.y + golfBall.velocityY)});
 
-    //add velocity
-    golfBall.x += golfBall.velocityX;
-    golfBall.y += golfBall.velocityY;
+    //add velocity if it didnt reflect
+    if(!golfBall.moved){
+        golfBall.x += golfBall.velocityX;
+        golfBall.y += golfBall.velocityY;
+    }
+
 
     //drawing
     ctx.beginPath();
-    ctx.arc(golfBall.x, golfBall.y, 10, 0, 2 * Math.PI);
+    ctx.arc(golfBall.x, golfBall.y, golfBallRadius, 0, 2 * Math.PI);
     ctx.fillStyle = 'gray';
     ctx.fill();
 }
