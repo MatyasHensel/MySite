@@ -1,8 +1,10 @@
 //------------------------ settings ------------------------
 const canvasRes = 1;
-const gravPull = 1;
-const drag = .97;
+const gravPull = .3;
+const drag = .99;
 const golfBallRadius = 10;
+const maxStrokePower = 100;
+const strokePowerDivider = 100;
 //------------------------ settings ------------------------
 let devMode = false;
 function toggleDevMode(){
@@ -40,7 +42,7 @@ resizeCanvas();
 
 window.addEventListener('resize', resizeCanvas);
 
-////////////////////////// creat mode //////////////////////////
+////////////////////////// create mode //////////////////////////
 class Rectangle{
     constructor(ax,ay,bx,by, color){
         this.ax = ax || 0;
@@ -77,6 +79,7 @@ window.addEventListener('mousedown', (event) => {
     rects.push(r);
 
     mouseDown = true;
+    stroke();
 });
 window.addEventListener('mouseout', (event)=>{
     if(mouseDown){
@@ -87,16 +90,20 @@ window.addEventListener('mouseout', (event)=>{
 window.addEventListener('mouseup', (event) => {
     if(!devMode || event.target !== canvas || !mouseDown){return;}
     mouseDown = false;
+    stroke();
 
     rectsI++;
 });
 
 window.addEventListener('mousemove', (event) => {mousePos(event);})
 
+let mouseX = 0;
+let mouseY = 0;
+
 function mousePos(e){
     const rect = canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
+    mouseX = e.clientX - rect.left;
+    mouseY = e.clientY - rect.top;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.beginPath();
@@ -116,7 +123,7 @@ function creatingRect(event){
     rects[rectsI].setB(mouseX, mouseY);
 }
 
-function drawRects(){
+function renderMisc(){
     for(i = 0; i < rects.length; i++){
         if(isNaN(rects[i].bx) || isNaN(rects[i].by)) continue;
 
@@ -126,6 +133,29 @@ function drawRects(){
         ctx.rect(r.ax, r.ay, r.bx - r.ax, r.by - r.ay);
         ctx.fillStyle= r.color;
         ctx.fill();
+    }
+
+    if(mouseDown && !devMode){
+        let strokeVector = {x: mouseX - point1.x, y: mouseY - point1.y};
+        let length = Math.sqrt(strokeVector.x * strokeVector.x + strokeVector.y * strokeVector.y)
+        strokeVector.x /= length;
+        strokeVector.y /= length;
+
+        strokeVector.x -= strokeVector.x;
+        strokeVector.y -= strokeVector.y;
+
+        length /= strokePowerDivider;
+        if(length > maxStrokePower){
+            length = maxStrokePower;
+        }
+
+        strokeVector.x *= length;
+        strokeVector.y *= length;
+
+        ctx.beginPath();
+        ctx.moveTo(golfBall.x, golfBall.y);
+        ctx.lineTo(strokeVector.x, strokeVector.y);
+        ctx.stroke();
     }
 }
 
@@ -150,9 +180,33 @@ function loadRects(){
 }
 loadRects();
 
-////////////////////////// creat mode //////////////////////////
+////////////////////////// create mode //////////////////////////
 
 ////////////////////////// logic //////////////////////////
+
+let point1 = {x: mouseX,y: mouseY};
+function stroke(){
+    if(mouseDown){
+        point1 = {x: mouseX,y: mouseY};
+        return;
+    }else{
+        let strokeVector = {x: mouseX - point1.x, y: mouseY - point1.y};
+        let length = Math.sqrt(strokeVector.x * strokeVector.x + strokeVector.y * strokeVector.y)
+        strokeVector.x /= length;
+        strokeVector.y /= length;
+
+        strokeVector.x -= strokeVector.x;
+        strokeVector.y -= strokeVector.y;
+
+        length /= strokePowerDivider;
+        if(length > maxStrokePower){
+            length = maxStrokePower;
+        }
+
+        golfBall.velocityX += strokeVector.x * length;
+        golfBall.velocityY += strokeVector.y * length;
+    }
+}
 
 //line array for calculating collision
 let lines = [];
@@ -262,7 +316,6 @@ function calculateColisions(A, B){
     }
 
     if(closest !== null){
-        console.log("collisionX: " + closest.x + ", collisionY: " + closest.y + ", t: " + closest.distance + ", ballAY: " + A.y + ", ballBY: " + B.y);
         reflect(closest.x, closest.y, closest.distance, closest.c, closest.d);
         //calculateColisions({x: golfBall.x, y: golfBall.y}, {x: golfBall.x + golfBall.velocityX, y: golfBall.y + golfBall.velocityY});
     }
@@ -313,7 +366,7 @@ function physics(){
 
 function update(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    drawRects();
+    renderMisc();
     physics();
 
     requestAnimationFrame(update);
