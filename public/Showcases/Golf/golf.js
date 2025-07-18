@@ -1,11 +1,15 @@
 //------------------------ settings ------------------------
 const canvasRes = 1;
-const gravPull = .3;
+const gravPull = .5;
 const drag = .99;
+const bounceDrag = .7;
 const golfBallRadius = 10;
 const maxStrokePower = 100;
-const strokePowerDivider = 100;
+const strokePowerDivider = 10;
+const minYVelocity = 1;
 //------------------------ settings ------------------------
+let grounded = true;
+
 let devMode = false;
 function toggleDevMode(){
     setTimeout(()=>{
@@ -66,31 +70,34 @@ class Rectangle{
 let rectsI = 0;
 let rects = [];
 let mouseDown = false;
+let mouseDownPoint = {x: 0,y: 0};
 
 window.addEventListener('mousedown', (event) => {
-    if(!devMode || event.target !== canvas){return;}
-
     let mouseX = event.clientX - rect.left;
     let mouseY = event.clientY - rect.top;
+    
+    mouseDownPoint = {x: mouseX,y: mouseY};
+    mouseDown = true;
+
+    if(!devMode || event.target !== canvas){stroke();return;}
 
     const r = new Rectangle();
     r.setA(mouseX, mouseY);
     r.setB(mouseX, mouseY);
     rects.push(r);
-
-    mouseDown = true;
-    stroke();
 });
 window.addEventListener('mouseout', (event)=>{
     if(mouseDown){
         mouseDown = false;
-        rects.pop();
+        if(devMode){
+            rects.pop();
+        }
+
     }
 });
 window.addEventListener('mouseup', (event) => {
-    if(!devMode || event.target !== canvas || !mouseDown){return;}
     mouseDown = false;
-    stroke();
+    if(!devMode || event.target !== canvas || !mouseDown){return;}
 
     rectsI++;
 });
@@ -104,12 +111,6 @@ function mousePos(e){
     const rect = canvas.getBoundingClientRect();
     mouseX = e.clientX - rect.left;
     mouseY = e.clientY - rect.top;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.beginPath();
-    ctx.arc(mouseX, mouseY, 10, 0, 2*Math.PI);
-    ctx.strokeStyle = "rgb(255, 0, 0)";
-    ctx.stroke();
 
     if(mouseDown && devMode){
         creatingRect(e);   
@@ -133,29 +134,6 @@ function renderMisc(){
         ctx.rect(r.ax, r.ay, r.bx - r.ax, r.by - r.ay);
         ctx.fillStyle= r.color;
         ctx.fill();
-    }
-
-    if(mouseDown && !devMode){
-        let strokeVector = {x: mouseX - point1.x, y: mouseY - point1.y};
-        let length = Math.sqrt(strokeVector.x * strokeVector.x + strokeVector.y * strokeVector.y)
-        strokeVector.x /= length;
-        strokeVector.y /= length;
-
-        strokeVector.x -= strokeVector.x;
-        strokeVector.y -= strokeVector.y;
-
-        length /= strokePowerDivider;
-        if(length > maxStrokePower){
-            length = maxStrokePower;
-        }
-
-        strokeVector.x *= length;
-        strokeVector.y *= length;
-
-        ctx.beginPath();
-        ctx.moveTo(golfBall.x, golfBall.y);
-        ctx.lineTo(strokeVector.x, strokeVector.y);
-        ctx.stroke();
     }
 }
 
@@ -183,28 +161,35 @@ loadRects();
 ////////////////////////// create mode //////////////////////////
 
 ////////////////////////// logic //////////////////////////
-
-let point1 = {x: mouseX,y: mouseY};
 function stroke(){
+    //console.log("mouseX: " + mouseX + "; mouseY: " + mouseY + " || mouseDownPointX: " + mouseDownPoint.x + "; mouseDownPointY: " + mouseDownPoint.y + " || mouseDown: " + mouseDown);
+
+    let strokeVector = {x: mouseX - mouseDownPoint.x, y: mouseY - mouseDownPoint.y};
+    let length = Math.sqrt(strokeVector.x * strokeVector.x + strokeVector.y * strokeVector.y)
+    strokeVector.x /= length;
+    strokeVector.y /= length;
+
+    strokeVector.x *= -1;
+    strokeVector.y *= -1;
+
+    length /= strokePowerDivider;
+    if(length > maxStrokePower){
+        length = maxStrokePower;
+    }
+
+    strokeVector.x *= length;
+    strokeVector.y *= length;
+
+    ctx.beginPath();
+    ctx.moveTo(golfBall.x, golfBall.y);
+    ctx.lineTo(golfBall.x + strokeVector.x, golfBall.y + strokeVector.y);
+    ctx.stroke();
+
     if(mouseDown){
-        point1 = {x: mouseX,y: mouseY};
-        return;
+        requestAnimationFrame(stroke);
     }else{
-        let strokeVector = {x: mouseX - point1.x, y: mouseY - point1.y};
-        let length = Math.sqrt(strokeVector.x * strokeVector.x + strokeVector.y * strokeVector.y)
-        strokeVector.x /= length;
-        strokeVector.y /= length;
-
-        strokeVector.x -= strokeVector.x;
-        strokeVector.y -= strokeVector.y;
-
-        length /= strokePowerDivider;
-        if(length > maxStrokePower){
-            length = maxStrokePower;
-        }
-
-        golfBall.velocityX += strokeVector.x * length;
-        golfBall.velocityY += strokeVector.y * length;
+        golfBall.velocityX = strokeVector.x;
+        golfBall.velocityY = strokeVector.y;
     }
 }
 
@@ -279,6 +264,9 @@ function reflect(hx, hy, t, C, D){
     golfBall.x = hx + golfBall.velocityX * (1 - golfBall.frameT);
     golfBall.y = hy + golfBall.velocityY * (1 - golfBall.frameT);
 
+    golfBall.velocityX *= bounceDrag;
+    golfBall.velocityY *= bounceDrag;
+    
     golfBall.moved = true;
 }
 
@@ -286,6 +274,8 @@ function normalizedVector(V){
     const length = Math.sqrt(V.x * V.x + V.y * V.y);
     return length === 0 ? {x: 0, y: 0} : {x: V.x / length, y: V.y / length};
 }
+
+let isGrounded = false;
 
 function calculateColisions(A, B){
     let closest = null;
@@ -316,8 +306,27 @@ function calculateColisions(A, B){
     }
 
     if(closest !== null){
+        const dy = closest.d.y - closest.c.y;
+        const isFlatSurface = Math.abs(dy) < 0.01;
+
+        if (isFlatSurface && golfBall.velocityY >= 0) {
+            isGrounded = true;
+
+            // Ground collision correction
+            golfBall.y = closest.y - golfBallRadius;
+            golfBall.velocityY = 0;
+
+            // Optional: Apply ground friction
+            golfBall.velocityX *= drag * 2;
+
+            if (Math.abs(golfBall.velocityX) < 0.05) golfBall.velocityX = 0;
+
+            return; // skip reflect
+        }else{
+            isGrounded = false;
+        }
+
         reflect(closest.x, closest.y, closest.distance, closest.c, closest.d);
-        //calculateColisions({x: golfBall.x, y: golfBall.y}, {x: golfBall.x + golfBall.velocityX, y: golfBall.y + golfBall.velocityY});
     }
 }
 
@@ -340,7 +349,9 @@ let golfBall = new GolfBall(canvas.width * .10, canvas.height * .50);
 
 function physics(){
     //gravity
-    golfBall.addGravity();
+    if(!isGrounded){
+        golfBall.addGravity();
+    }
 
     golfBall.velocityX *= drag;
     golfBall.velocityY *= drag;
