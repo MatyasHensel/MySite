@@ -6,9 +6,9 @@ const bounceDrag = .7;
 const golfBallRadius = 10;
 const maxStrokePower = 100;
 const strokePowerDivider = 10;
-const minYVelocity = 1;
+const minYVelocity = 2;
+const snapGroundDis = 5;
 //------------------------ settings ------------------------
-let grounded = true;
 
 let devMode = false;
 function toggleDevMode(){
@@ -275,9 +275,7 @@ function normalizedVector(V){
     return length === 0 ? {x: 0, y: 0} : {x: V.x / length, y: V.y / length};
 }
 
-let isGrounded = false;
-
-function calculateColisions(A, B){
+function calculateColisions(A, B, checkGround){
     let closest = null;
 
     for (let i = 0; i < lines.length; i++) {
@@ -305,26 +303,21 @@ function calculateColisions(A, B){
         }
     }
 
+
+
     if(closest !== null){
-        const dy = closest.d.y - closest.c.y;
-        const isFlatSurface = Math.abs(dy) < 0.01;
+        if(checkGround && Math.abs(golfBall.velocityY) <= minYVelocity){
 
-        if (isFlatSurface && golfBall.velocityY >= 0) {
-            isGrounded = true;
-
-            // Ground collision correction
-            golfBall.y = closest.y - golfBallRadius;
+            golfBall.y = closest.y - 1;
             golfBall.velocityY = 0;
+            golfBall.velocityX *= drag * drag * drag;
 
-            // Optional: Apply ground friction
-            golfBall.velocityX *= drag * 2;
-
-            if (Math.abs(golfBall.velocityX) < 0.05) golfBall.velocityX = 0;
-
-            return; // skip reflect
-        }else{
-            isGrounded = false;
+            console.log("snap to ground");
+            grounded = true;
+            return;
         }
+        if(checkGround){return;};
+        
 
         reflect(closest.x, closest.y, closest.distance, closest.c, closest.d);
     }
@@ -346,20 +339,27 @@ class GolfBall{
     }
 }
 let golfBall = new GolfBall(canvas.width * .10, canvas.height * .50);
+let grounded = false;
 
 function physics(){
-    //gravity
-    if(!isGrounded){
-        golfBall.addGravity();
-    }
+
+    golfBall.addGravity();
+
 
     golfBall.velocityX *= drag;
     golfBall.velocityY *= drag;
 
     golfBall.moved = false;
+
     //calculate collisions
+    grounded = false;
     golfBall.frameT = 0;
-    calculateColisions({x: golfBall.x, y: golfBall.y}, {x: (golfBall.x + golfBall.velocityX), y: (golfBall.y + golfBall.velocityY)});
+    calculateColisions({x: golfBall.x, y: golfBall.y - golfBallRadius}, {x: (golfBall.x), y: (golfBall.y + snapGroundDis)}, true);
+    if(!grounded){
+        calculateColisions({x: golfBall.x, y: golfBall.y}, {x: (golfBall.x + golfBall.velocityX), y: (golfBall.y + golfBall.velocityY)}, false);
+    }else{
+        calculateColisions({x: golfBall.x, y: golfBall.y}, {x: (golfBall.x + golfBall.velocityX), y: (golfBall.y)}, false);
+    }
 
     //add velocity if it didnt reflect
     if(!golfBall.moved){
@@ -375,13 +375,54 @@ function physics(){
     ctx.fill();
 }
 
+const flagBaseWidth = 40;
+const flagBaseHeight = 5;
+const flagPoleHeight = 60;
+const flagPoleWidth = 6;
+const flagWidth = 30;
+const flagHeight = 20;
+
+class flagpole{
+    constructor(x, y){
+        this.x = x;
+        this.y = y;
+    }
+
+    render(){
+        //base
+        ctx.beginPath();
+        ctx.rect(this.x - flagBaseWidth/2, this.y, flagBaseWidth, flagBaseHeight);
+        ctx.fillStyle = "gray";
+        ctx.fill();
+        ctx.stroke();
+
+        //pole
+        ctx.beginPath();
+        ctx.rect(this.x - flagPoleWidth/2, this.y, flagPoleWidth, - flagPoleHeight);
+        ctx.fillStyle = "black";
+        ctx.fill();
+        ctx.stroke();
+
+        //flag
+        ctx.beginPath();
+        ctx.moveTo(this.x - 3, this.y - flagPoleHeight);
+        ctx.lineTo(this.x - 3 - flagWidth, this.y - flagPoleHeight + flagHeight/2);
+        ctx.lineTo(this.x - 3, this.y - flagPoleHeight + flagHeight);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.stroke();
+    }
+}
+
 function update(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     renderMisc();
+    flag.render();
     physics();
 
     requestAnimationFrame(update);
 }
+let flag = new flagpole(250, 250);
 calculateLines();
 update();
 ////////////////////////// logic //////////////////////////
