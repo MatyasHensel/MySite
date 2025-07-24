@@ -1,6 +1,20 @@
 const express = require('express');
 const path = require('path');
+const https = require('https');
+const fs = require('fs');
 const app = express();
+
+
+//https stuff
+const options = {
+  key: fs.readFileSync("C:/win-acme/matyashensel.com-key.pem"),
+  cert: fs.readFileSync("C:/win-acme/matyashensel.com-chain.pem")
+};
+
+https.createServer(options, app).listen(443, () => {
+  console.log("✅ HTTPS server running on port 443");
+});
+
 const PORT = 8080;
 
 app.use((req, res, next) => {
