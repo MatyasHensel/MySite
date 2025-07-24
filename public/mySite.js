@@ -96,7 +96,12 @@ function setColor(){
         });
         document.querySelectorAll(".showcaseContainer").forEach(showcaseContainer => {
             showcaseContainer.style.backgroundColor = data.ShowcaseBox;
-            console.log("showcase changed");
+        });
+        document.querySelectorAll(".leftSideInfoContainer").forEach(leftSideInfoContainer => {
+            leftSideInfoContainer.style.backgroundColor = data.ShowcaseBox;
+        });
+        document.querySelectorAll(".aboutMeElement").forEach(aboutMeElement => {
+            aboutMeElement.style.backgroundColor = data.TextColor;
         });
     });
 }

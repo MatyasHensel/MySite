@@ -14,6 +14,19 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+.slide-in-bottom{
+    animation: slideInBottom 0.4s ease-out forwards;
+    transition-timing-function: ease-in;
+}
+@keyframes slideInBottom{
+    0% {
+        transform: translateY(200%);
+    }
+    
+    100% {
+        transform: translateY(0);
+    }
+}
 .slide-in-top{
     animation: slideInTop 0.4s ease-out forwards;
     transition-timing-function: ease-in;
@@ -188,24 +201,20 @@ input[type=text]{
     height: 354px;
     width: 70%;
     box-sizing: border-box;
-    border-radius: 10px;
     border: 2px solid black;
     text-align: left;
-    transition-duration: 200ms;
+    transition-duration: 100ms;
     overflow: hidden;
 }
 .showcaseContainer:hover{
-    transform: translateY(-10px);
-    box-shadow: 0px 10px black;
-    
+    transform: scale(0.99);
+    cursor: pointer;
 }
 .showcaseContainer:active{
-    transform: translateY(-2px);
-    box-shadow: 0px 2px black;
-    transition-duration: 50ms;
+    transform: scale(1);
 }
+
 .showcaseImage{
-    border-radius: 7px 0px 0px 7px;
     left: 0;
     top: 0;
     z-index: 1;
@@ -241,9 +250,7 @@ input[type=text]{
     background-color: gray;
     padding: 0;
     overflow: hidden;
-    border-radius: 10px;
     border: 2px solid black;
-    box-shadow: 0px 5px black;
     z-index: 2;
 }
 
@@ -255,17 +262,13 @@ input[type=text]{
     z-index: 1;
     padding: 0;
     margin: 15px;
-    border-radius: 10px;
     border: 2px solid black;
-    box-shadow: 0px 5px black;
     cursor: pointer;
     z-index: 2;
 }.aboutMeElement:hover{
-    transform: translateY(-5px);
-    box-shadow: 0px 10px black;
+    transform: scale(1.1);
 }.aboutMeElement:active{
-    transform: translateY(2px);
-    box-shadow: 0px 3px black;
+    transform: scale(1);
 }
 .iconAboutMe{
     display: inline-block;

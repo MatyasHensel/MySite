@@ -4,5 +4,5 @@
     "MainMenuColor": "#005EA1",
     "BodyBackground": "#FFFFFF",
     "TextColor": "#000000",
-    "ShowcaseBox": "#FFFFFF"
+    "ShowcaseBox": "#0080DC"
 }

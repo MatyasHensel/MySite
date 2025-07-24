@@ -320,6 +320,9 @@ function calculateColisions(A, B, checkGround){
         
 
         reflect(closest.x, closest.y, closest.distance, closest.c, closest.d);
+
+        if(golfBall.frameT >= 1){return};
+        calculateColisions({x: closest.x, y: closest.y}, {x:golfBall.x, y: golfBall.y}, false);
     }
 }
 

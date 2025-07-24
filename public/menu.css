@@ -16,12 +16,11 @@ a{
     padding-top: 10px;
     font-weight: bold;
 }
-a.light:hover{
-    background-color: #004677;
+a:hover{
+    text-decoration: underline;
 }
-a.dark:hover{
-    background-color: #36074B;
-}
+
+
 
 .buttonLang{
     border: none;
@@ -33,21 +32,17 @@ a.dark:hover{
     margin:auto;
     z-index: 1;
     position: absolute;
-    right: 5px;
-    top: 15px;
+    right: 10px;
+    top: 10px;
     cursor: pointer;
-    border-radius: 10px;
-    box-shadow: 0px 0px black;
-    transition: 200ms;
+    transition: 100ms;
 }
 .buttonLang:hover{
-    transform: translateY(-10px);
-    box-shadow: 0px 10px black;
+    transform: scale(1.04);
 }
 .buttonLang:active{
-    transform: translateY(-2px);
-    box-shadow: 0px 2px black;
-    transition: 50ms;
+    transform: scale(1);
+    transition: 30ms;
 }
 
 .mainTitle{
@@ -66,11 +61,12 @@ a.dark:hover{
     display: inline-block;
     transition: 1s;
     white-space: pre;
-    cursor: pointer;
+    cursor: default;
 }
 .letter:hover {
-    color: transparent;
-    transition: 0s;
+    color: rgb(255, 255, 255);
+    transform: scale(1.4);
+    transition: 0ms;
 }
 
 .menuSpacer{
@@ -103,7 +99,7 @@ a.dark:hover{
 .darkMode{
     position: absolute;
     right: 100px;
-    top: 15px;
+    top: 10px;
 }
 .darkMode input{
     display: none;
@@ -111,24 +107,23 @@ a.dark:hover{
 
 .slider {
   display: inline-block;
-  width: 69px;
-  height: 35px;
+  width: 75px;
+  height: 40px;
   background-color: white;
-  border-radius: 34px;
   position: relative;
   cursor: pointer;
   transition: 0.4s;
   border: 5px solid black;
+  transition-duration: 100ms;
+}.slider:hover{
+    transform:scale(1.04);
 }
 
 .slider:before {
   position: absolute;
   content: "";
-  border-radius: 50%;
-  height: 37px;
-  width: 37px;
-  left: -1px;
-  bottom: -1px;
+  height: 40px;
+  width: 40px;
   background-color: #003154;
   -webkit-transition: .4s;
   transition: .4s;
@@ -145,7 +140,7 @@ input:focus + .slider {
 
 input:checked + .slider:before {
     background-color: #5f0c85;
-  -webkit-transform: translateX(33px);
-  -ms-transform: translateX(33px);
-  transform: translateX(33px);
+  -webkit-transform: translateX(35px);
+  -ms-transform: translateX(35px);
+  transform: translateX(35x);
 }

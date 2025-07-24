@@ -3,6 +3,6 @@
     "MainTitleBackground": "#5F0C85",
     "MainMenuColor": "#4A0968",
     "BodyBackground": "#2D2D2D",
-    "TextColor": "white",
-    "ShowcaseBox": "#4B4B4B"
+    "TextColor": "#B1B1B1",
+    "ShowcaseBox": "#5F0C85"
 }
