@@ -5,6 +5,7 @@ const http = require('http');
 const fs = require('fs');
 const app = express();
 
+const PORT = 443;
 
 //https stuff
 const options = {
@@ -12,11 +13,11 @@ const options = {
   cert: fs.readFileSync("C:/win-acme/matyashensel.com-chain.pem")
 };
 
-https.createServer(options, app).listen(443, () => {
+https.createServer(options, app).listen(PORT, '0.0.0.0', () => {
   console.log("✅ HTTPS server running on port 443");
 });
 
-const PORT = 443;
+
 
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.ip} requested ${req.method} ${req.url} Host: ${req.headers.host}`);
@@ -52,7 +53,7 @@ http.createServer((req, res) => {
   const host = req.headers.host.replace(/:\d+$/, ''); // remove port
   res.writeHead(301, { Location: `https://${host}${req.url}` });
   res.end();
-}).listen(80, () => {
+}).listen(80, '0.0.0.0', () => {
   console.log("🔁 HTTP redirect server running on port 80");
 });
 
