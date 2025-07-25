@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const https = require('https');
+const http = require('http');
 const fs = require('fs');
 const app = express();
 
@@ -15,7 +16,7 @@ https.createServer(options, app).listen(443, () => {
   console.log("✅ HTTPS server running on port 443");
 });
 
-const PORT = 8080;
+const PORT = 443;
 
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.ip} requested ${req.method} ${req.url} Host: ${req.headers.host}`);
@@ -46,13 +47,13 @@ app.get('*', (req, res) => {
   }
 });
 
-const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log(`Server running at http://localhost:${PORT}`);
-});
 
-server.on("error", (err) => {
-    console.error("❌ Failed to start server:", err.message);
-    process.exit(1);
+http.createServer((req, res) => {
+  const host = req.headers.host.replace(/:\d+$/, ''); // remove port
+  res.writeHead(301, { Location: `https://${host}${req.url}` });
+  res.end();
+}).listen(80, () => {
+  console.log("🔁 HTTP redirect server running on port 80");
 });
 
 console.log('backendServerRunning');
