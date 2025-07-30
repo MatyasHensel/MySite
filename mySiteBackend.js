@@ -46,10 +46,10 @@ app.get('*', (req, res) => {
 
 
 http.createServer((req, res) => {
-  const host = req.headers.host.replace(/:\d+$/, ''); // remove port
+  const host = req.headers.host.replace(/:\d+$/, '') || ''; // fixed this on a trip, check later
   res.writeHead(301, { Location: `https://${host}${req.url}` });
   res.end();
-}).listen(80, '0.0.0.0', () => {
+}).listen(8080, '0.0.0.0', () => {
   console.log("🔁 HTTP redirect server running on port 80");
 });
 
